@@ -1,5 +1,5 @@
 {
-  "name": "og-telegram-bot",
+  "name": "telegram-multibot",
   "version": "1.0.0",
   "main": "og.js",
   "scripts": {
