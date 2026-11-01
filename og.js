@@ -11,7 +11,7 @@ const gTTS = require("gtts");
 
 // ---------- CONFIG ----------
 const STATE_FILE = "state.json";
-const TOKENS_FILE = "tokens.txt"; // put your tokens here, one per line; keep this file private
+const TOKENS_FILE = "8808904948:AAEhgDsHraM4WRF3p36jfyfKF_JXOz8d5cE,8543117776:AAG0PWaWQQE5wYM3vSd8a2bHaWhqWVX42eg,8591193736:AAEXBUpUcFB_QhR9RZz2otHgKiGgVFbbFYY,8915135430:AAFqLmK-BVx29G4UMq-PROcgWEBRqWpHGEA"; // put your tokens here, one per line; keep this file private
 const MAX_BOTS = 20; // will load at most 20 tokens
 
 let chatState = fs.existsSync(STATE_FILE)
