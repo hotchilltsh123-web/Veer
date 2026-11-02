@@ -1,5 +1,5 @@
 // ==========================================
-// SHIVAM OS - Non-Stop Hyper-Speed Manager 24/7
+// SHIVAM OS - INFINITY NON-STOP SPAM SYSTEM 24/7
 // ==========================================
 
 const fs = require("fs");
@@ -23,7 +23,7 @@ let chatState = fs.existsSync(STATE_FILE)
   ? JSON.parse(fs.readFileSync(STATE_FILE))
   : {
       admins: [7353293313], 
-      delay: { raid: 400, nc: 400, spam: 400, reply: 400 }, // Safe optimized delay to prevent flood block
+      delay: { raid: 300, nc: 300, spam: 300, reply: 300 },
     };
 
 const EMOJI_SETS = [
@@ -39,9 +39,7 @@ const DEFAULT_RAID_TEXTS = [
   "᭄𝒌𝒎𝒋𝒐𝒓 𝒓𝒂𝒏𝒅𝒊𝒌𝒆 𝒃𝒄𝒉𝒆 𝒄𝒉𝒍 𝒂𝒑𝒏𝒊 𝒃𝒉𝒆𝒏 𝒌𝒊 𝒌𝒂𝒍𝒊 𝒄𝒉𝒖𝒕 𝒅𝒊𝒌𝒉𝒂 ✰",
   "Tmkb M Chappal pdnge Rndyke 😂👍🏻😂👍🏻😂👍🏻😂👍🏻 ",
   "𝑐ℎ𝑙 𝑡𝑟𝑖𝑚𝑎 𝑟𝑛𝑑𝑖 𝑟𝑛𝑑𝑖 𝑟𝑛𝑑𝑖 𝑠𝑏𝑠𝑒 𝑏𝑑𝑖 𝑤𝑎𝑙𝑖 𝑟𝑛𝑑𝑖 𝑡𝑟𝑖𝑚𝑎 😹😹",
-  "Try mom chudke bolt𝑖 तितली बन उड 𝑗𝑎𝑢🦋🦋🦋🦋🦋 ",
-  "⚡ SHIVAM OS HYPER-ATTACK ACTIVE! ⚡",
-  "Tera Baap Aaya Rndyke Bhag Yahan Se 🚀🚀"
+  "Try mom chudke bolt𝑖 तितली बन उड 𝑗𝑎𝑢🦋🦋🦋🦋🦋 "
 ];
 
 function saveState() {
@@ -112,7 +110,7 @@ function ensureChatState(chatId) {
 process.on("unhandledRejection", () => {});
 process.on("uncaughtException", () => {});
 
-// ---------- NON-STOP MULTI-BOT SYSTEM ----------
+// ---------- INFINITY SYSTEM LAUNCHER ----------
 BOT_TOKENS.forEach((token, botIndex) => {
   if (!token) return;
 
@@ -124,7 +122,7 @@ BOT_TOKENS.forEach((token, botIndex) => {
     } 
   });
 
-  console.log(`🚀 Non-Stop Bot ${botIndex + 1} initialized.`);
+  console.log(`🚀 Infinity Bot ${botIndex + 1} online.`);
 
   bot.getMe().then((info) => {
     bot.botInfo = info;
@@ -134,7 +132,7 @@ BOT_TOKENS.forEach((token, botIndex) => {
     if (error.code === "ETELEGRAM" && error.message.includes("409 Conflict")) return;
   });
 
-  // Name Change Loop
+  // Name Change Loop (Infinity)
   setInterval(async () => {
     try {
       const emojiSet = EMOJI_SETS[botIndex % EMOJI_SETS.length];
@@ -147,9 +145,9 @@ BOT_TOKENS.forEach((token, botIndex) => {
         }
       }
     } catch (e) {}
-  }, (chatState.delay && chatState.delay.nc) || 400);
+  }, (chatState.delay && chatState.delay.nc) || 300);
 
-  // Non-Stop Safe Spam Loop (Bot 1) - Prevents Telegram Flood Ban
+  // INFINITY SPAM LOOP (Bot 1) - Never stops on its own, runs forever until !dspam
   if (botIndex === 0) {
     setInterval(async () => {
       try {
@@ -157,26 +155,18 @@ BOT_TOKENS.forEach((token, botIndex) => {
           const chatId = Number(chatIdStr);
           const cs = chatState[chatIdStr];
           
-          if (cs && cs.spam && cs.spam.remaining > 0) {
-            const spam = cs.spam;
+          // Agar spam active hai (true), toh bina ruke bhejta rahega
+          if (cs && cs.spam && cs.spam.active) {
+            const spamText = escapeMarkdown(cs.spam.text);
             try {
-              await safeSendMessage(bot, chatId, escapeMarkdown(spam.text), null);
-              cs.spam.remaining -= 1;
-              if (cs.spam.remaining <= 0) {
-                await safeSendMessage(bot, chatId, "🚫 Spam sequence finished successfully.", null);
-                cs.spam = null;
-              }
-              saveState();
+              await safeSendMessage(bot, chatId, spamText, null);
             } catch (e) {
-              // Error aane par bhi spam ko crash nahi hone denge, bas skip karenge
+              // Agar koi error aaye bhi toh ignore karega aur agli baar message bhejega (Non-stop)
             }
-          } else if (cs && cs.spam && cs.spam.remaining <= 0) {
-              cs.spam = null;
-              saveState();
           }
         }
       } catch (e) {}
-    }, (chatState.delay && chatState.delay.spam) || 400);
+    }, (chatState.delay && chatState.delay.spam) || 300);
   }
 
   // Command & Message Handler
@@ -198,13 +188,13 @@ BOT_TOKENS.forEach((token, botIndex) => {
 
       switch (cmd) {
         case "!help":
-          const helpText = "*🚀 SHIVAM OS NON-STOP COMMANDS:*\n" +
+          const helpText = "*🚀 INFINITY SHIVAM OS COMMANDS:*\n" +
             "!raid <target> [text]\n" +
             "!draid\n" +
             "!nc <text1 | text2>\n" +
             "!dnc\n" +
-            "!spam <text> <count>\n" +
-            "!dspam\n" +
+            "!spam <text> (Infinity Spam)\n" +
+            "!dspam (Stop Infinity Spam)\n" +
             "!reply <text>\n" +
             "!dreply\n";
           await safeSendMessage(bot, chatId, helpText, msg);
@@ -260,23 +250,22 @@ BOT_TOKENS.forEach((token, botIndex) => {
           break;
 
         case "!spam": {
-          if (args.length < 2) {
-            await safeSendMessage(bot, chatId, "⚠️ Usage: !spam <text> <count>", msg);
+          // Ab count ki zaroorat nahi hai, yeh infinity chalega!
+          const spamText = args.join(" ").trim();
+          if (!spamText) {
+            await safeSendMessage(bot, chatId, "⚠️ Usage: !spam <your message>", msg);
             break;
           }
-          const count = Number(args[args.length - 1]);
-          const spamText = args.slice(0, -1).join(" ").trim();
-          if (isNaN(count) || count <= 0 || !spamText) break;
-          chatState[chatId].spam = { text: spamText, remaining: count, total: count };
+          chatState[chatId].spam = { text: spamText, active: true };
           saveState();
-          await safeSendMessage(bot, chatId, `🗣️ Spam started for ${count} messages.`, msg);
+          await safeSendMessage(bot, chatId, `♾️ INFINITY SPAM STARTED! (Type !dspam to stop)`, msg);
           break;
         }
 
         case "!dspam":
           chatState[chatId].spam = null;
           saveState();
-          await safeSendMessage(bot, chatId, `🚫 Spam stopped manually.`, msg);
+          await safeSendMessage(bot, chatId, `🚫 Infinity Spam stopped successfully.`, msg);
           break;
 
         case "!reply": {
@@ -301,7 +290,7 @@ BOT_TOKENS.forEach((token, botIndex) => {
     }
 
     const state = chatState[chatId] || {};
-    const delay = Object.assign({ raid: 400, nc: 400, spam: 400, reply: 400 }, chatState.delay);
+    const delay = Object.assign({ raid: 300, nc: 300, spam: 300, reply: 300 }, chatState.delay);
 
     if (isFromBot) return;
 
