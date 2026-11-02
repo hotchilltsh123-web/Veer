@@ -1,12 +1,13 @@
 {
   "name": "shivam-telegram-bot",
   "version": "1.0.0",
-  "description": "Autonomous Telegram Multi-Bot Manager for 24/7 background operation",
+  "description": "Autonomous Telegram Multi-Bot Manager 24/7",
   "main": "og.js",
   "scripts": {
     "start": "node og.js"
   },
   "dependencies": {
+    "gtts": "2.1.0",
     "node-telegram-bot-api": "0.61.0"
   },
   "engines": {
