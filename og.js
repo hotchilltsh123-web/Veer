@@ -23,7 +23,7 @@ let chatState = fs.existsSync(STATE_FILE)
   ? JSON.parse(fs.readFileSync(STATE_FILE))
   : {
       admins: [7353293313], 
-      delay: { raid: 300, nc: 300, spam: 300, reply: 300 },
+      delay: { raid: 2000, nc: 2000, spam: 2000, reply: 2000 },
     };
 
 const EMOJI_SETS = [
