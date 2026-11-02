@@ -1,16 +1,15 @@
 // ==========================================
-// SHIVAM OS - Hyper-Speed Multi-Bot Manager 24/7
+// SHIVAM OS - Non-Stop Hyper-Speed Manager 24/7
 // ==========================================
 
 const fs = require("fs");
 const path = require("path");
 const TelegramBot = require("node-telegram-bot-api");
 
-// 1. CONFIGURATION & ADMIN IDs
 const ADMIN_IDS = [7353293313]; 
 const STATE_FILE = "state.json";
 
-// All 6 Active Embedded Bot Tokens
+// All 6 Active Embedded Bot Tokens[span_0](start_span)[span_0](end_span)
 const BOT_TOKENS = [
   "9105219431:AAH7IrYVrfQFnKtYTM0cj-aGUJO_70-Kotk",
   "9276513885:AAHF6nZayrVqB9DdpFyJLjIrloOLAAvN3mY",
@@ -24,7 +23,7 @@ let chatState = fs.existsSync(STATE_FILE)
   ? JSON.parse(fs.readFileSync(STATE_FILE))
   : {
       admins: [7353293313], 
-      delay: { raid: 100, nc: 100, spam: 100, reply: 100 }, // Ultra-Fast 100ms
+      delay: { raid: 400, nc: 400, spam: 400, reply: 400 }, // Safe optimized delay to prevent flood block
     };
 
 const EMOJI_SETS = [
@@ -113,20 +112,19 @@ function ensureChatState(chatId) {
 process.on("unhandledRejection", () => {});
 process.on("uncaughtException", () => {});
 
-// ---------- HYPER-SPEED BOT LAUNCHER ----------
+// ---------- NON-STOP MULTI-BOT SYSTEM ----------
 BOT_TOKENS.forEach((token, botIndex) => {
   if (!token) return;
 
-  // Ultra-fast zero-delay polling configuration
   const bot = new TelegramBot(token, { 
     polling: {
-      interval: 0,
+      interval: 100,
       autoStart: true,
-      params: { timeout: 0 }
+      params: { timeout: 10 }
     } 
   });
 
-  console.log(`🚀 Ultra-Power Bot ${botIndex + 1} launched successfully.`);
+  console.log(`🚀 Non-Stop Bot ${botIndex + 1} initialized.`);
 
   bot.getMe().then((info) => {
     bot.botInfo = info;
@@ -136,7 +134,7 @@ BOT_TOKENS.forEach((token, botIndex) => {
     if (error.code === "ETELEGRAM" && error.message.includes("409 Conflict")) return;
   });
 
-  // Rapid Multi-Bot Name Change Loop
+  // Name Change Loop
   setInterval(async () => {
     try {
       const emojiSet = EMOJI_SETS[botIndex % EMOJI_SETS.length];
@@ -149,38 +147,39 @@ BOT_TOKENS.forEach((token, botIndex) => {
         }
       }
     } catch (e) {}
-  }, (chatState.delay && chatState.delay.nc) || 100);
+  }, (chatState.delay && chatState.delay.nc) || 400);
 
-  // Parallel Spam Loop across Bots
-  setInterval(async () => {
-    try {
-      for (const chatIdStr of Object.keys(chatState)) {
-        const chatId = Number(chatIdStr);
-        const cs = chatState[chatIdStr];
-        
-        if (cs && cs.spam && cs.spam.remaining > 0) {
-          const spam = cs.spam;
-          try {
-            await safeSendMessage(bot, chatId, escapeMarkdown(spam.text), null);
-            cs.spam.remaining -= 1;
-            if (cs.spam.remaining <= 0) {
-              await safeSendMessage(bot, chatId, "🚫 Ultra-Spam sequence finished.", null);
-              cs.spam = null;
+  // Non-Stop Safe Spam Loop (Bot 1) - Prevents Telegram Flood Ban
+  if (botIndex === 0) {
+    setInterval(async () => {
+      try {
+        for (const chatIdStr of Object.keys(chatState)) {
+          const chatId = Number(chatIdStr);
+          const cs = chatState[chatIdStr];
+          
+          if (cs && cs.spam && cs.spam.remaining > 0) {
+            const spam = cs.spam;
+            try {
+              await safeSendMessage(bot, chatId, escapeMarkdown(spam.text), null);
+              cs.spam.remaining -= 1;
+              if (cs.spam.remaining <= 0) {
+                await safeSendMessage(bot, chatId, "🚫 Spam sequence finished successfully.", null);
+                cs.spam = null;
+              }
+              saveState();
+            } catch (e) {
+              // Error aane par bhi spam ko crash nahi hone denge, bas skip karenge
             }
-            saveState();
-          } catch (e) {
-            cs.spam = null;
-            saveState();
+          } else if (cs && cs.spam && cs.spam.remaining <= 0) {
+              cs.spam = null;
+              saveState();
           }
-        } else if (cs && cs.spam && cs.spam.remaining <= 0) {
-            cs.spam = null;
-            saveState();
         }
-      }
-    } catch (e) {}
-  }, (chatState.delay && chatState.delay.spam) || 100);
+      } catch (e) {}
+    }, (chatState.delay && chatState.delay.spam) || 400);
+  }
 
-  // Instant Message & Command Handler
+  // Command & Message Handler
   bot.on("message", async (msg) => {
     if (!msg || !msg.chat) return;
     const chatId = msg.chat.id;
@@ -199,17 +198,15 @@ BOT_TOKENS.forEach((token, botIndex) => {
 
       switch (cmd) {
         case "!help":
-          const helpText = "*🚀 ULTRA SHIVAM OS COMMANDS:*\n" +
-            "!raid <target> [text] - Instant Raid\n" +
-            "!draid - Stop Raid\n" +
-            "!nc <text1 | text2> - Ultra Fast Name Change\n" +
-            "!dnc - Stop Name Change\n" +
-            "!spam <text> <count> - High-Speed Multi-Spam\n" +
-            "!dspam - Stop Spam\n" +
-            "!reply <text> - Instant Auto Reply\n" +
-            "!dreply - Stop Reply\n" +
-            "!sudo <id> - Add Extra Admin\n" +
-            "!rmsudo <id> - Remove Admin\n";
+          const helpText = "*🚀 SHIVAM OS NON-STOP COMMANDS:*\n" +
+            "!raid <target> [text]\n" +
+            "!draid\n" +
+            "!nc <text1 | text2>\n" +
+            "!dnc\n" +
+            "!spam <text> <count>\n" +
+            "!dspam\n" +
+            "!reply <text>\n" +
+            "!dreply\n";
           await safeSendMessage(bot, chatId, helpText, msg);
           break;
 
@@ -227,13 +224,13 @@ BOT_TOKENS.forEach((token, botIndex) => {
             }
           }
           if (!target) {
-            await safeSendMessage(bot, chatId, "⚠️ Reply to target user or provide User ID!", msg);
+            await safeSendMessage(bot, chatId, "⚠️ Provide target user!", msg);
             break;
           }
           let raidText = args.slice(targetArgsOffset).join(" ").trim() || DEFAULT_RAID_TEXTS[Math.floor(Math.random() * DEFAULT_RAID_TEXTS.length)];
           chatState[chatId].raid = { raidText, target };
           saveState();
-          await safeSendMessage(bot, chatId, `🔥 ULTRA-RAID ACTIVATED!`, msg);
+          await safeSendMessage(bot, chatId, `🔥 Raid activated!`, msg);
           break;
         }
 
@@ -252,7 +249,7 @@ BOT_TOKENS.forEach((token, botIndex) => {
           const texts = rest.split("|").map(s => s.trim()).filter(Boolean);
           chatState[chatId].nc = { texts };
           saveState();
-          await safeSendMessage(bot, chatId, `⚡ TURBO NAME CHANGE ACTIVATED!`, msg);
+          await safeSendMessage(bot, chatId, `⚡ NC started!`, msg);
           break;
         }
 
@@ -272,14 +269,14 @@ BOT_TOKENS.forEach((token, botIndex) => {
           if (isNaN(count) || count <= 0 || !spamText) break;
           chatState[chatId].spam = { text: spamText, remaining: count, total: count };
           saveState();
-          await safeSendMessage(bot, chatId, `🗣️ HYPER-SPAM ACTIVATED FOR ${count} MESSAGES!`, msg);
+          await safeSendMessage(bot, chatId, `🗣️ Spam started for ${count} messages.`, msg);
           break;
         }
 
         case "!dspam":
           chatState[chatId].spam = null;
           saveState();
-          await safeSendMessage(bot, chatId, `🚫 Spam stopped.`, msg);
+          await safeSendMessage(bot, chatId, `🚫 Spam stopped manually.`, msg);
           break;
 
         case "!reply": {
@@ -297,27 +294,6 @@ BOT_TOKENS.forEach((token, botIndex) => {
           await safeSendMessage(bot, chatId, `🚫 Auto-reply stopped.`, msg);
           break;
 
-        case "!sudo": {
-          if (args.length < 1) break;
-          const parsed = parseUserRefArg(args[0]);
-          if (!parsed || !parsed.id) break;
-          chatState.sudo = chatState.sudo || [];
-          if (!chatState.sudo.includes(parsed.id)) chatState.sudo.push(parsed.id);
-          saveState();
-          await safeSendMessage(bot, chatId, `✅ Added Admin ID: ${parsed.id}`, msg);
-          break;
-        }
-
-        case "!rmsudo": {
-          if (args.length < 1) break;
-          const parsed = parseUserRefArg(args[0]);
-          if (!parsed || !parsed.id) break;
-          chatState.sudo = (chatState.sudo || []).filter(x => x !== parsed.id);
-          saveState();
-          await safeSendMessage(bot, chatId, `❌ Removed Admin ID: ${parsed.id}`, msg);
-          break;
-        }
-
         default:
           break;
       }
@@ -325,11 +301,10 @@ BOT_TOKENS.forEach((token, botIndex) => {
     }
 
     const state = chatState[chatId] || {};
-    const delay = Object.assign({ raid: 100, nc: 100, spam: 100, reply: 100 }, chatState.delay);
+    const delay = Object.assign({ raid: 400, nc: 400, spam: 400, reply: 400 }, chatState.delay);
 
     if (isFromBot) return;
 
-    // Fast Target Trigger
     if (state.raid && state.raid.target) {
       const t = state.raid.target;
       let targetId = t?.userObj?.id ? Number(t.userObj.id) : (t?.id ? Number(t.id) : null);
@@ -339,7 +314,6 @@ BOT_TOKENS.forEach((token, botIndex) => {
       }
     }
     
-    // Instant Auto-Reply
     if (state.reply && state.reply.text) {
       setTimeout(async () => {
         try { await safeSendMessage(bot, chatId, state.reply.text, msg); } catch (e) {}
