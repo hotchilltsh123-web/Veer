@@ -1,7 +1,7 @@
 {
   "name": "shivam-telegram-bot",
   "version": "1.0.0",
-  "description": "24/7 Telegram Multi-Bot Worker",
+  "description": "Ultra Hyper-Speed Telegram Multi-Bot System",
   "main": "og.js",
   "scripts": {
     "start": "node og.js"
