@@ -11,7 +11,7 @@ const ADMIN_IDS = [7353293313];
 const STATE_FILE = "state.json";
 const MAX_BOTS = 20;
 
-// Direct Embedded Bot Tokens (Up to 5 bots)[span_1](start_span)[span_1](end_span)
+// Direct Embedded Bot Tokens (Up to 5 bots)[span_2](start_span)[span_2](end_span)
 const BOT_TOKENS = [
   "8611644994:AAHnCJ10aUjPUrl23en1OjC27PiL59izg1g",
   "8808904948:AAEhgDsHraM4WRF3p36jfyfKF_JXOz8d5cE",
@@ -115,10 +115,18 @@ process.on("unhandledRejection", (r) => {
   console.error("UnhandledRejection:", r?.stack || r);
 });
 
-// ---------- MAIN: START ALL BOTS ----------
+// ---------- MAIN: START ALL BOTS WITH CONFLICT PROTECTION ----------
 BOT_TOKENS.forEach((token, botIndex) => {
   if (!token) return;
-  const bot = new TelegramBot(token, { polling: true });
+
+  const bot = new TelegramBot(token, { 
+    polling: {
+      interval: 2000,
+      autoStart: true,
+      params: { timeout: 10 }
+    } 
+  });
+
   console.log(`Bot ${botIndex + 1} started successfully.`);
 
   bot.getMe().then((info) => {
@@ -126,6 +134,14 @@ BOT_TOKENS.forEach((token, botIndex) => {
     console.log(`Bot ${botIndex + 1} username=@${info.username}`);
   }).catch((e) => {
     console.warn("Failed to getMe for bot", botIndex + 1, e?.message);
+  });
+
+  // Ignore 409 conflict spam so logs remain clean
+  bot.on("polling_error", (error) => {
+    if (error.code === "ETELEGRAM" && error.message.includes("409 Conflict")) {
+      return;
+    }
+    console.log(`Polling error on Bot ${botIndex + 1}:`, error.message);
   });
 
   // Name Change (NC) loop per bot
@@ -197,17 +213,17 @@ BOT_TOKENS.forEach((token, botIndex) => {
       switch (cmd) {
         case "!help":
           const helpText = "*Commands:*\n" +
-            "!raid <target> [text] - start raid[span_2](start_span)[span_2](end_span)\n" +
-            "!draid - stop raid[span_3](start_span)[span_3](end_span)\n" +
-            "!nc <text1 | text2> - name change loop[span_4](start_span)[span_4](end_span)\n" +
-            "!dnc - stop nc[span_5](start_span)[span_5](end_span)\n" +
-            "!spam <text> <count> - spam messages[span_6](start_span)[span_6](end_span)\n" +
-            "!dspam - stop spam[span_7](start_span)[span_7](end_span)\n" +
-            "!reply <text> - auto reply[span_8](start_span)[span_8](end_span)\n" +
-            "!dreply - stop reply[span_9](start_span)[span_9](end_span)\n" +
-            "!delay <feature> <time> - set delay[span_10](start_span)[span_10](end_span)\n" +
-            "!sudo <id> - add sudo admin[span_11](start_span)[span_11](end_span)\n" +
-            "!rmsudo <id> - remove sudo admin[span_12](start_span)[span_12](end_span)\n";
+            "!raid <target> [text] - start raid[span_3](start_span)[span_3](end_span)\n" +
+            "!draid - stop raid[span_4](start_span)[span_4](end_span)\n" +
+            "!nc <text1 | text2> - name change loop[span_5](start_span)[span_5](end_span)\n" +
+            "!dnc - stop nc[span_6](start_span)[span_6](end_span)\n" +
+            "!spam <text> <count> - spam messages[span_7](start_span)[span_7](end_span)\n" +
+            "!dspam - stop spam[span_8](start_span)[span_8](end_span)\n" +
+            "!reply <text> - auto reply[span_9](start_span)[span_9](end_span)\n" +
+            "!dreply - stop reply[span_10](start_span)[span_10](end_span)\n" +
+            "!delay <feature> <time> - set delay[span_11](start_span)[span_11](end_span)\n" +
+            "!sudo <id> - add sudo admin[span_12](start_span)[span_12](end_span)\n" +
+            "!rmsudo <id> - remove sudo admin[span_13](start_span)[span_13](end_span)\n";
           await safeSendMessage(bot, chatId, helpText, msg);
           break;
 
