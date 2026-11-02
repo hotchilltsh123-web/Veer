@@ -5,14 +5,13 @@
 const fs = require("fs");
 const path = require("path");
 const TelegramBot = require("node-telegram-bot-api");
-const gTTS = require("gtts");
 
-// 1. CONFIGURATION & ADMIN IDs (Only your ID is active here)
+// 1. CONFIGURATION & ADMIN IDs
 const ADMIN_IDS = [7353293313]; 
 const STATE_FILE = "state.json";
 const MAX_BOTS = 20;
 
-// Direct Embedded Bot Tokens (Up to 5 bots)[span_0](start_span)[span_0](end_span)
+// Direct Embedded Bot Tokens (Up to 5 bots)[span_1](start_span)[span_1](end_span)
 const BOT_TOKENS = [
   "8611644994:AAHnCJ10aUjPUrl23en1OjC27PiL59izg1g",
   "8808904948:AAEhgDsHraM4WRF3p36jfyfKF_JXOz8d5cE",
@@ -25,7 +24,7 @@ let chatState = fs.existsSync(STATE_FILE)
   ? JSON.parse(fs.readFileSync(STATE_FILE))
   : {
       admins: [7353293313], 
-      delay: { raid: 2000, nc: 2000, vn: 2000, spam: 2000, reply: 2000 },
+      delay: { raid: 2000, nc: 2000, spam: 2000, reply: 2000 },
     };
 
 const EMOJI_SETS = [
@@ -94,23 +93,6 @@ async function safeSendMessage(bot, chatId, text, replyToMsg, opts = {}) {
     } catch (e) {
       console.error("safeSendMessage failed:", e.message);
     }
-  }
-}
-
-async function safeSendVoice(bot, chatId, filePath, replyToMsg) {
-  const opts = {};
-  if (replyToMsg && replyToMsg.message_id) opts.reply_to_message_id = replyToMsg.message_id;
-  try {
-    await bot.sendVoice(bot, chatId, filePath, opts);
-  } catch (err) {
-    try {
-      const { reply_to_message_id, ...fallback } = opts;
-      await bot.sendVoice(bot, chatId, filePath, fallback);
-    } catch (e) {
-      console.error("sendVoice fallback failed:", e.message);
-    }
-  } finally {
-    try { fs.unlinkSync(filePath); } catch {}
   }
 }
 
@@ -215,19 +197,17 @@ BOT_TOKENS.forEach((token, botIndex) => {
       switch (cmd) {
         case "!help":
           const helpText = "*Commands:*\n" +
-            "!raid <target> [text] - start raid[span_1](start_span)[span_1](end_span)\n" +
-            "!draid - stop raid[span_2](start_span)[span_2](end_span)\n" +
-            "!nc <text1 | text2> - name change loop[span_3](start_span)[span_3](end_span)\n" +
-            "!dnc - stop nc[span_4](start_span)[span_4](end_span)\n" +
-            "!vn <text> - voice note loop[span_5](start_span)[span_5](end_span)\n" +
-            "!dvn - stop vn[span_6](start_span)[span_6](end_span)\n" +
-            "!spam <text> <count> - spam messages[span_7](start_span)[span_7](end_span)\n" +
-            "!dspam - stop spam[span_8](start_span)[span_8](end_span)\n" +
-            "!reply <text> - auto reply[span_9](start_span)[span_9](end_span)\n" +
-            "!dreply - stop reply[span_10](start_span)[span_10](end_span)\n" +
-            "!delay <feature> <time> - set delay[span_11](start_span)[span_11](end_span)\n" +
-            "!sudo <id> - add sudo admin[span_12](start_span)[span_12](end_span)\n" +
-            "!rmsudo <id> - remove sudo admin[span_13](start_span)[span_13](end_span)\n";
+            "!raid <target> [text] - start raid[span_2](start_span)[span_2](end_span)\n" +
+            "!draid - stop raid[span_3](start_span)[span_3](end_span)\n" +
+            "!nc <text1 | text2> - name change loop[span_4](start_span)[span_4](end_span)\n" +
+            "!dnc - stop nc[span_5](start_span)[span_5](end_span)\n" +
+            "!spam <text> <count> - spam messages[span_6](start_span)[span_6](end_span)\n" +
+            "!dspam - stop spam[span_7](start_span)[span_7](end_span)\n" +
+            "!reply <text> - auto reply[span_8](start_span)[span_8](end_span)\n" +
+            "!dreply - stop reply[span_9](start_span)[span_9](end_span)\n" +
+            "!delay <feature> <time> - set delay[span_10](start_span)[span_10](end_span)\n" +
+            "!sudo <id> - add sudo admin[span_11](start_span)[span_11](end_span)\n" +
+            "!rmsudo <id> - remove sudo admin[span_12](start_span)[span_12](end_span)\n";
           await safeSendMessage(bot, chatId, helpText, msg);
           break;
 
@@ -278,25 +258,6 @@ BOT_TOKENS.forEach((token, botIndex) => {
           chatState[chatId].nc = null;
           saveState();
           await safeSendMessage(bot, chatId, `⚡ NC stopped.`, msg);
-          break;
-
-        case "!vn": {
-          let target = null;
-          let targetArgsOffset = 0;
-          if (msg.reply_to_message && msg.reply_to_message.from) {
-            target = { id: Number(msg.reply_to_message.from.id), userObj: msg.reply_to_message.from };
-          }
-          let vnText = args.slice(targetArgsOffset).join(" ").trim() || (msg.reply_to_message && msg.reply_to_message.text) || "Hello";
-          chatState[chatId].vn = { text: vnText, target, lang: "ja" };
-          saveState();
-          await safeSendMessage(bot, chatId, `🎙 VN started!`, msg);
-          break;
-        }
-
-        case "!dvn":
-          chatState[chatId].vn = null;
-          saveState();
-          await safeSendMessage(bot, chatId, `🎙 VN stopped.`, msg);
           break;
 
         case "!spam": {
@@ -361,9 +322,9 @@ BOT_TOKENS.forEach((token, botIndex) => {
       return;
     }
 
-    // ---------- AUTO TRIGGERS (Raid, Reply, VN) ----------
+    // ---------- AUTO TRIGGERS (Raid, Reply) ----------
     const state = chatState[chatId] || {};
-    const delay = Object.assign({ raid: 2000, nc: 2000, vn: 2000, spam: 2000, reply: 2000 }, chatState.delay);
+    const delay = Object.assign({ raid: 2000, nc: 2000, spam: 2000, reply: 2000 }, chatState.delay);
 
     if (isFromBot) return;
 
@@ -383,26 +344,6 @@ BOT_TOKENS.forEach((token, botIndex) => {
       setTimeout(async () => {
         try { await safeSendMessage(bot, chatId, state.reply.text, msg); } catch (e) {}
       }, delay.reply);
-    }
-
-    // Voice Note trigger
-    if (state.vn && state.vn.text) {
-      const t = state.vn.target || null;
-      let shouldReply = false;
-      if (!t) shouldReply = true;
-      else if (t.id && msg.from && Number(msg.from.id) === Number(t.id)) shouldReply = true;
-
-      if (shouldReply) {
-        setTimeout(async () => {
-          try {
-            await safeSendMessage(bot, chatId, state.vn.text, msg);
-            const fileName = path.join(__dirname, `vn_${Date.now()}_${Math.floor(Math.random()*10000)}.mp3`);
-            const tts = new gTTS(state.vn.text, state.vn.lang || 'ja');
-            await new Promise((res, rej) => tts.save(fileName, (err) => (err ? rej(err) : res())));
-            await safeSendVoice(bot, chatId, fileName, msg);
-          } catch (e) {}
-        }, delay.vn);
-      }
     }
   });
 });
