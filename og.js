@@ -11,13 +11,12 @@ const ADMIN_IDS = [7353293313];
 const STATE_FILE = "state.json";
 const MAX_BOTS = 20;
 
-// Direct Embedded Bot Tokens (Up to 5 bots)[span_2](start_span)[span_2](end_span)
+// Your New Bot Tokens Directly Embedded
 const BOT_TOKENS = [
-  "8611644994:AAHnCJ10aUjPUrl23en1OjC27PiL59izg1g",
-  "8808904948:AAEhgDsHraM4WRF3p36jfyfKF_JXOz8d5cE",
-  "8543117776:AAG0PWaWQQE5wYM3vSd8a2bHaWhqWVX42eg",
-  "8591193736:AAEXBUpUcFB_QhR9RZz2otHgKiGgVFbbFYY",
-  "8995808281:AAHcRgToXSpdNs8opWQXeEgDHk-l0Ec9T0o"
+  "9105219431:AAH7IrYVrfQFnKtYTM0cj-aGUJO_70-Kotk",
+  "9276513885:AAHF6nZayrVqB9DdpFyJLjIrloOLAAvN3mY",
+  "8522472818:AAGLz7E05HzQgQL0rL5W88z1mL35tmDeQuE",
+  "9137305740:AAFmHKK6mDbdOonIFCBfvKFVdK6LrQlGGRE"
 ];
 
 let chatState = fs.existsSync(STATE_FILE)
@@ -213,17 +212,17 @@ BOT_TOKENS.forEach((token, botIndex) => {
       switch (cmd) {
         case "!help":
           const helpText = "*Commands:*\n" +
-            "!raid <target> [text] - start raid[span_3](start_span)[span_3](end_span)\n" +
-            "!draid - stop raid[span_4](start_span)[span_4](end_span)\n" +
-            "!nc <text1 | text2> - name change loop[span_5](start_span)[span_5](end_span)\n" +
-            "!dnc - stop nc[span_6](start_span)[span_6](end_span)\n" +
-            "!spam <text> <count> - spam messages[span_7](start_span)[span_7](end_span)\n" +
-            "!dspam - stop spam[span_8](start_span)[span_8](end_span)\n" +
-            "!reply <text> - auto reply[span_9](start_span)[span_9](end_span)\n" +
-            "!dreply - stop reply[span_10](start_span)[span_10](end_span)\n" +
-            "!delay <feature> <time> - set delay[span_11](start_span)[span_11](end_span)\n" +
-            "!sudo <id> - add sudo admin[span_12](start_span)[span_12](end_span)\n" +
-            "!rmsudo <id> - remove sudo admin[span_13](start_span)[span_13](end_span)\n";
+            "!raid <target> [text] - start raid\n" +
+            "!draid - stop raid\n" +
+            "!nc <text1 | text2> - name change loop\n" +
+            "!dnc - stop nc\n" +
+            "!spam <text> <count> - spam messages\n" +
+            "!dspam - stop spam\n" +
+            "!reply <text> - auto reply\n" +
+            "!dreply - stop reply\n" +
+            "!delay <feature> <time> - set delay\n" +
+            "!sudo <id> - add sudo admin\n" +
+            "!rmsudo <id> - remove sudo admin\n";
           await safeSendMessage(bot, chatId, helpText, msg);
           break;
 
